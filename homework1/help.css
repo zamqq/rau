@@ -1,0 +1,84 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-image: url(New_map.jpg);
+    background-position: center 40%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    backdrop-filter: blur(2px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.title {
+    font-family: 'Inter';
+    font-weight: 700;
+    letter-spacing: 0em;
+    color: #FFFFFF;
+    margin: 0;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 5rem;
+}
+
+
+.container {
+    background-color: white;
+    border-radius: 30px;
+    display: flex;
+    height: 21.938rem;
+    width: 18.188rem;
+    padding: 2rem 1rem 1rem 1rem;   
+    color: #CFCFCF;
+    font-family: 'Inter';
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    text-wrap: balance;
+}
+
+h1 {
+    font-size: 96px;
+    line-height: 116.18px;
+    margin: 0;
+}
+
+h2 {
+    font-size: 36px;
+    line-height: 44px;
+    letter-spacing: 0em;
+
+}
+
+h3 {
+    font-family: 'Inter';
+    font-size: 24px;
+    line-height: 44px;
+    letter-spacing: 0em;
+    margin: 0;
+}
+
+p {
+    font-family: 'Inter';
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19px;
+    letter-spacing: 0em;
+}
+
