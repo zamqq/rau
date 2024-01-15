@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joc de Memorie Audio</title>
+    <style>
+        button {
+            font-size: 18px;
+            margin: 10px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Joc de Memorie Audio</h1>
+
+<button id="startButton" onclick="startGame()">Start Joc</button>
+
+<div id="userInput" style="display: none;">
+    <label for="userSequence">Introdu secventa:</label>
+    <input type="text" id="userSequence" placeholder="Exemplu: 0,1,2">
+    <button onclick="checkUserInput()">Verifica</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    const sounds = [
+        'SoundHelix-Song-1.mp3',
+        'SoundHelix-Song-2.mp3',
+        'SoundHelix-Song-3.mp3'
+        
+    ];
+
+    let sequence = [];
+    let userSequence = [];
+    let level = 1;
+    let isPlaying = false;
+
+    function startGame() {
+        if (!isPlaying) {
+            isPlaying = true;
+            sequence = generateSequence(level);
+            playSequence();
+        }
+    }
+
+    function generateSequence(length) {
+        const sequence = [];
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * sounds.length);
+            sequence.push(randomIndex);
+        }
+        return sequence;
+    }
+
+    function playSequence() {
+        let i = 0;
+        const interval = setInterval(() => {
+            playSound(sequence[i]);
+            i++;
+            if (i >= sequence.length) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    userSequence = [];
+                    getUserInput();
+                }, 1000);
+            }
+        }, 1000);
+    }
+
+    function playSound(index) {
+        const source = audioContext.createBufferSource();
+        const request = new XMLHttpRequest();
+        request.open('GET', sounds[index], true);
+        request.responseType = 'arraybuffer';
+
+        request.onload = function () {
+            audioContext.decodeAudioData(request.response, function (buffer) {
+                source.buffer = buffer;
+                source.connect(audioContext.destination);
+                source.start(0);
+            }, function (error) {
+                console.error('Error decoding audio file', error);
+            });
+        };
+
+        request.send();
+    }
+
+    function getUserInput() {
+        $('#userInput').show();
+    }
+
+    function checkUserInput() {
+        const userInput = $('#userSequence').val().split(',').map(Number);
+
+        if (arraysEqual(userInput, sequence)) {
+            alert('Corect! Următorul nivel.');
+            level++;
+            startGame();
+        } else {
+            alert('Greșit! Jocul se va reseta.');
+            level = 1;
+            isPlaying = false;
+            $('#userSequence').val('');
+            $('#userInput').hide();
+        }
+    }
+
+    function arraysEqual(arr1, arr2) {
+        if (arr1.length !== arr2.length) return false;
+        for (let i = 0; i < arr1.length; i++) {
+            if (arr1[i] !== arr2[i]) return false;
+        }
+        return true;
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<h1>To-Do List</h1>
+
+<input type="text" id="taskInput" placeholder="Adauga o sarcina">
+<button onclick="addTask()">Adauga</button>
+
+<ul id="taskList"></ul>
+
+<script>
+
+    function addTask() {
+        const taskInput = document.getElementById("taskInput");
+        const taskList = document.getElementById("taskList");
+
+        const taskText = taskInput.value.trim();
+
+        if (taskText !== "") {
+            const taskItem = document.createElement("li");
+            taskItem.innerHTML = `
+                <input type="checkbox" onchange="toggleComplete(this)">
+                <span>${taskText}</span>
+                <button onclick="editTask(this)">Editeaza</button>
+                <button onclick="deleteTask(this)">Sterge</button>
+            `;
+
+            taskList.appendChild(taskItem);
+
+            taskInput.value = "";
+            saveTasksToLocalStorage();
+        }
+    }
+
+    function toggleComplete(checkbox) {
+        const taskText = checkbox.nextElementSibling;
+        taskText.classList.toggle("completed");
+        saveTasksToLocalStorage();
+    }
+
+    function editTask(button) {
+        const taskItem = button.parentElement;
+        const taskText = taskItem.querySelector("span");
+
+        const updatedText = prompt("Editati sarcina:", taskText.innerText);
+
+        if (updatedText !== null && updatedText.trim() !== "") {
+            taskText.innerText = updatedText.trim();
+            saveTasksToLocalStorage();
+        }
+    }
+
+    function deleteTask(button) {
+        const taskItem = button.parentElement;
+        taskItem.remove();
+        saveTasksToLocalStorage();
+    }
+
+    function saveTasksToLocalStorage() {
+        const taskList = document.getElementById("taskList");
+        const tasks = [];
+
+        taskList.querySelectorAll("li").forEach(taskItem => {
+            const taskText = taskItem.querySelector("span").innerText;
+            const isCompleted = taskItem.querySelector("input[type=checkbox]").checked;
+
+            tasks.push({ text: taskText, completed: isCompleted });
+        });
+
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    function loadTasksFromLocalStorage() {
+        const taskList = document.getElementById("taskList");
+        const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+        storedTasks.forEach(task => {
+            const taskItem = document.createElement("li");
+            taskItem.innerHTML = `
+                <input type="checkbox" onchange="toggleComplete(this)" ${task.completed ? "checked" : ""}>
+                <span class="${task.completed ? "completed" : ""}">${task.text}</span>
+                <button onclick="editTask(this)">Editeaza</button>
+                <button onclick="deleteTask(this)">Sterge</button>
+            `;
+
+            taskList.appendChild(taskItem);
+        });
+    }
+
+    loadTasksFromLocalStorage();
+</script>
+
+</body>
+</html>

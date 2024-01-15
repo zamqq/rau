@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joc de Trivia</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        #question-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="question-container">
+    <h2 id="question">Intrebare:</h2>
+    <div id="options-container"></div>
+    <div id="result"></div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "Care este capitala Frantei?",
+            options: ["Berlin", "Londra", "Paris", "Madrid"],
+            correctAnswer: "Paris"
+        },
+        {
+            question: "Cate planete exista in sistemul nostru solar?",
+            options: ["7", "8", "9", "10"],
+            correctAnswer: "8"
+        },
+        {
+            question: "Care este cel mai inalt munte din lume?",
+            options: ["K2", "Mont Blanc", "Mount Everest", "Makalu"],
+            correctAnswer: "Mount Everest"
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function startGame() {
+        currentQuestionIndex = 0;
+        score = 0;
+        displayQuestion();
+    }
+
+    function displayQuestion() {
+        const questionElement = document.getElementById("question");
+        const optionsContainer = document.getElementById("options-container");
+        const resultElement = document.getElementById("result");
+
+        const currentQuestion = questions[currentQuestionIndex];
+
+        questionElement.textContent = currentQuestion.question;
+        optionsContainer.innerHTML = "";
+
+        currentQuestion.options.forEach((option, index) => {
+            const button = document.createElement("button");
+            button.textContent = option;
+            button.onclick = () => checkAnswer(option);
+            optionsContainer.appendChild(button);
+        });
+
+        resultElement.textContent = "";
+
+        if (currentQuestionIndex === questions.length - 0) {
+            optionsContainer.innerHTML = `<button onclick="finishGame()">Finish Game</button>`;
+        }
+    }
+
+    function checkAnswer(selectedAnswer) {
+        const currentQuestion = questions[currentQuestionIndex];
+        if (selectedAnswer === currentQuestion.correctAnswer) {
+            score++;
+        }
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+            displayQuestion();
+        } else {
+            finishGame();
+        }
+    }
+
+    function finishGame() {
+        const resultElement = document.getElementById("result");
+        resultElement.textContent = `Joc terminat! Scorul tau este: ${score} / ${questions.length}`;
+        document.getElementById("options-container").innerHTML = "";
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < questions.length) {
+            displayQuestion();
+        }
+    }
+
+    window.onload = startGame;
+
+</script>
+
+</body>
+</html>
